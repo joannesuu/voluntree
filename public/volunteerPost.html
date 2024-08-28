@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Volunteer Location</title>
+  <link rel="stylesheet" href="/stylesheets/volunteerPost.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+
+  <script src="https://kit.fontawesome.com/71a3ca1f63.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/min/moment.min.js"></script>
+
+
+
+
+
+</head>
+
+<body>
+  <div id="app">
+    <!-- nav bar -->
+    <div class="navbar">
+      <a onclick="window.location.href = '/volunteerHome.html';">HOME</a>
+      <a onclick="window.location.href = '/volunteerOpportunity.html';">OPPORTUNITY</a>
+      <a onclick="window.location.href = '/volunteerSchedule.html';">SCHEDULE</a>
+      <a onclick="window.location.href = '/volunteerLocation.html';">LOCATION</a>
+      <div class="profile-icon">
+        <img src="profile-pic.png" alt="Profile Picture">
+        <button type="button" id="logout" onclick="window.location.href = '/index.html';">Logout</button>
+      </div>
+    </div>
+
+    <!-- showing all public and private posts -->
+    <main>
+      <div class="container">
+        <div class="main-content">
+          <h1>POSTS</h1>
+          <div class="posts-container">
+            <div class="post" v-for="post in posts" :key="post.post_id" @click="showPost(post)">
+              <img class="post-image" src="images.png" alt="Post Image">
+              <div class="post-details">
+                <h2>{{ post.title }}</h2>
+                <p>{{ post.content.substring(0, 100) }}...</p>
+                <p><strong>Published Date:</strong> {{ formatDate(post.published_date) }}</p>
+                <p><strong>Published Time:</strong> {{ formatTime(post.published_time) }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <div v-if="selectedPost" class="modal-overlay">
+      <div class="modal-content">
+        <span class="close" @click="closeModal">&times;</span>
+        <img class="post-image" src="images.png" alt="Post Image">
+        <h2>{{ selectedPost.title }}</h2>
+        <p>{{ selectedPost.content }}</p>
+        <p><strong>Published Date:</strong> {{ formatDate(selectedPost.published_date) }}</p>
+        <p><strong>Published Time:</strong> {{ formatTime(selectedPost.published_time) }}</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        posts: [],
+        selectedPost: null
+      },
+      mounted() {
+        this.getPostDetails();
+      },
+      methods: {
+        showPost(post) {
+          this.selectedPost = post;
+        },
+        closeModal() {
+          this.selectedPost = null;
+        },
+        getPostDetails() {
+          axios.get('/users/displayBranchPosts.ajax')
+              .then(response => {
+                  console.log('Post data fetched:', response.data);
+                  this.posts = response.data;
+                  console.log('Post data assigned:', this.posts);
+              })
+              .catch(error => {
+                  console.error('Error fetching post data:', error.response ? error.response.data : error.message);
+              });
+      },
+      logout() {
+          window.location.href = '/index.html';
+      },
+      formatDate(date, format) {
+        return moment(date).format('dddd, MMMM Do YYYY');
+      },
+      formatTime(time) {
+        return moment(time, 'HH:mm:ss').format('h:mm A');
+      }
+      }
+    });
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,271 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+}
+
+.navbar {
+  display: flex;
+  background-color: #fff;
+  padding: 10px 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar a {
+  text-decoration: none;
+  color: #333;
+  margin-right: 20px;
+  padding: 10px 16px;
+}
+
+.navbar a:hover {
+  background-color: #ddd;
+  border-radius: 4px;
+}
+
+.navbar .profile-icon {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+}
+
+.navbar img {
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+}
+
+.navbar .profile-icon button {
+  background-color: transparent;
+  color: black;
+  border: none;
+  padding: 8px 0px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.container {
+  display: flex;
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.main-contentpage {
+  width: 100%;
+}
+
+.welcome-section {
+  padding: 10px 20px;
+  border: 5px solid #ddd;
+  margin-top: 50px;
+  margin-left: 50px;
+  margin-right: 50px;
+  display: flex;
+}
+
+.welcome-box {
+  display: flex;
+  align-items: center;
+}
+
+.welcome-photo img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 4px;
+  margin-right: 20px;
+}
+
+.welcome-profile h2, .welcome-profile h1, .welcome-profile p {
+  margin: 2px;
+}
+
+.main-content {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.intro {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.intro h2 {
+  margin: 0;
+}
+
+.intro p {
+  margin: 10px 0;
+}
+
+.intro button {
+  padding: 10px 20px;
+  background-color: #003892;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.content-grid {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  max-width: 1200px;
+  margin-bottom: 20px;
+}
+
+.content-box {
+  background-color: #ddd;
+  width: 30%;
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.image-container {
+  position: relative;
+}
+
+.image-container img {
+  width: 100%;
+  height: auto;
+}
+
+.text-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  padding: 10px;
+  text-align: center;
+  border-radius: 4px;
+  backdrop-filter: blur(10px);
+}
+
+.updates-section, .events-section {
+  width: 100%;
+  max-width: 1200px;
+  margin-bottom: 20px;
+}
+
+.updates-section h2, .events-section h2 {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.updates-section button, .events-section button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background-color: #003892;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.updates-grid {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+.update-box {
+  background-color:#893101;
+  opacity: 0.7;
+  width: 45%;
+  padding: 20px;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.update-box i {
+  margin-right: 10px;
+  color: white;
+}
+
+.update-box p {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: white;
+}
+
+.event-box {
+  background-color:#893101;
+  opacity: 0.7;
+  width: 45%;
+  padding: 20px;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.event-grid {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+.event-content {
+  display: flex;
+  align-items: center;
+}
+.event-content p {
+  color: white;
+}
+
+.event-content i {
+  font-size: 3.5rem;
+  margin-right: 20px;
+  color: white;
+}
+
+.event-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.view-more-button {
+  display: block;
+  margin: auto;
+  margin-top: 10px;
+  padding: 10px 20px;
+  background-color: #003892;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: center;
+}
+
+#subscribe-button {
+  display: block;
+  margin: 20px auto;
+  padding: 10px 20px;
+  background-color: #893101;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+#subscribe-button:hover {
+  background-color: #4f1c00;
+}
+

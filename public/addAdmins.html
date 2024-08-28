@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>System Admin Home Page to add Other Admins</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <link rel="stylesheet" href="/stylesheets/addAdmins.css">
+        <link rel="stylesheet" href="/stylesheets/main.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;1,300;1,400&display=swap"
+            rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Poetsen+One&display=swap" rel="stylesheet">
+
+        <script src="https://kit.fontawesome.com/71a3ca1f63.js" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+        <script src="/javascripts/adminVue.js" defer></script>
+        <script src="/javascripts/admin.js" defer></script>
+        <script src="/javascripts/birthday.js" defer></script>
+        <script src="/javascripts/logout.js" defer></script>
+    </head>
+
+    <body>
+        <!--Top Navigation Bar-->
+        <div class="navigationBar">
+            <div class="navigationIcons">
+                <button title="Home" type="button" onclick="window.location.href = '/adminLanding.html';" class="iconButton"> <i
+                        class="fa-solid fa-house fa-2x"></i></button>
+                <button title="Manage Users" type="button" onclick="window.location.href = '/manageUsers.html';" class="iconButton"> <i
+                        class="fa-solid fa-users fa-2x "></i></button>
+                <button title="Manage Branches" type="button" onclick="window.location.href = '/manageBranch.html';" class="iconButton"> <i
+                        class="fa-solid fa-sitemap fa-2x"></i></button>
+            </div>
+            <div class="topRightUser">
+                <button title="Profile" type="button" onclick="window.location.href = '/userProfile.html';"
+                    class="iconButton"> <i class="fa-solid fa-user fa-2x iconDefaultColor"></i></button>
+                <button title="Logout" type="button" onclick="logoutUser();" class="iconButton">
+                    <i class="fa-solid fa-right-from-bracket fa-2x iconDefaultColor"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="container" id="app">
+
+            <!--Side Navigation Bar-->
+            <div class="sidebar">
+                <h1 class="dashboardTitleFont">Home</h1>
+                <hr class="hrColour">
+                <h2 class="dashboardTitleFont">What would you like to do?</h2>
+                <ol>
+                    <li><button type="button" class="listButton"
+                            onclick="window.location.href = '/adminLanding.html';">Home</button></li>
+                    <li><button type="button" class="listButton" onclick="window.location.href = '/addAdmins.html';">Add
+                            admins</button></li>
+                    <li><button type="button" class="listButton"
+                            onclick="window.location.href = '/manageBranch.html';">Manage branches</button></li>
+                    <li><button type="button" class="listButton"
+                            onclick="window.location.href = '/manageUsers.html';">Manage users</button></li>
+                </ol>
+                <hr class="hrColour">
+                <div class="footer">
+                    Voluntree
+                </div>
+            </div>
+
+            <!--Main Content to Add Admin-->
+            <main class="mainContent addAdmin">
+                <div class="formContainer">
+                    <h3 class="formTitle">Add Admin</h3>
+                    <form @submit.prevent="addAdmin" class="adminForm">
+
+                        <!--New Admin Name-->
+                        <div class="formGroup">
+                            <label for="addAdminFirstName" class="formLabel">First name:</label>
+                            <input type="text" id="addAdminFirstName" name="addAdminFirstName"
+                                placeholder="Enter first name" required>
+                        </div>
+                        <div class="formGroup">
+                            <label for="addAdminLastName" class="formLabel">Last name:</label>
+                            <input type="text" id="addAdminLastName" name="addAdminLastName" placeholder="Enter last name"
+                                required>
+                        </div>
+
+                        <!--New Admin Email-->
+                        <div class="formGroup">
+                            <label for="adminEmail" class="formLabel">Email:</label>
+                            <input type="email" id="adminEmail" name="adminEmail" placeholder="Enter email" required>
+                        </div>
+
+                        <!--New Admin Password-->
+                        <div class="formGroup">
+                            <label for="userPassword" class="formLabel">Password:</label>
+                            <input type="password" id="userPassword" name="userPassword" placeholder="Enter password"
+                                pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" maxlength="18"
+                                title="The password must contain 6 to 18 characters, which must include at least 1 digit, 1 uppercase letter and 1 lowercase letter"
+                                required>
+                            <button type=button id="passwordButton" class="listButton" onclick="showPassword()">Show
+                                password</button>
+                        </div>
+
+                        <!--New Admin Contact Number-->
+                        <div class="formGroup">
+                            <label for="adminContact" class="formLabel">Contact number:</label>
+                            <input type="tel" id="adminContact" name="adminContact" placeholder="04xxxxxxx"
+                                pattern="^04[0-9]{8}$" required>
+                        </div>
+
+                        <!--New Admin DOB-->
+                        <div class="formGroup">
+                            <label for="day">Day:</label>
+                            <select id="day" name="day" required></select>
+                            <label for="month">Month:</label>
+                            <select id="month" name="month" required></select>
+                            <label for="year">Year:</label>
+                            <select id="year" name="year" required></select>
+                        </div>
+
+                        <!--Submit Button-->
+                        <input type="submit" class="submitButton" value="Add admin">
+                    </form>
+                </div>
+            </main>
+            <script>
+                // Option to toggle password ON/OFF when entering the form
+                function showPassword() {
+                    var passwordInput = document.getElementById('userPassword');
+                    if (passwordInput.type === "password") {
+                        passwordInput.type = "text";
+                        document.getElementById('passwordButton').innerText = 'Hide password';
+                    } else {
+                        passwordInput.type = "password";
+                        document.getElementById('passwordButton').innerText = 'Show password';
+                    }
+                }
+            </script>
+        </div>
+    </body>
+
+</html>

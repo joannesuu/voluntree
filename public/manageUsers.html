@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>System Admin Home Page</title>
+  <!-- <link rel="stylesheet" href="/stylesheets/manageUsers.css"> -->
+  <link rel="stylesheet" href="/stylesheets/subPages.css">
+  <link rel="stylesheet" href="/stylesheets/main.css">
+  <script src="https://kit.fontawesome.com/71a3ca1f63.js" crossorigin="anonymous"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poetsen+One&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+  <script src="/javascripts/birthday.js"></script>
+  <script src="/javascripts/adminVue.js" defer></script>
+  <script src="/javascripts/logout.js" defer></script>
+
+</head>
+
+<body>
+  <!--Section for navigation bar-->
+  <div class="navigationBar">
+    <div class="navigationIcons">
+      <button type="button" onclick="window.location.href = '/adminLanding.html';" class="iconButton"> <i
+          class="fa-solid fa-house fa-2x"></i></button>
+      <button type="button" onclick="window.location.href = '/manageUsers.html';" class="iconButton" id="targetIcon"> <i
+          class="fa-solid fa-users fa-2x "></i></button>
+      <button type="button" onclick="window.location.href = '/manageBranch.html';" class="iconButton"> <i
+          class="fa-solid fa-sitemap fa-2x"></i></button>
+    </div>
+    <div class="topRightUser">
+      <button title="Profile" type="button" onclick="window.location.href = '/userProfile.html';" class="iconButton"> <i
+          class="fa-solid fa-user fa-2x iconDefaultColor"></i></button>
+      <button title="Logout" type="button" onclick="logoutUser();" class="iconButton">
+        <i class="fa-solid fa-right-from-bracket fa-2x iconDefaultColor"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- for side dashboard -->
+  <div class="container" id="app">
+    <div class="sidebar">
+
+      <h1 class="dashboardTitleFont">Home</h1>
+      <hr class="hrColour">
+      <h2 class="dashboardTitleFont">What would you like to do?</h2>
+      <ol>
+        <li><button type="button" class="listButton"
+            onclick="window.location.href = '/manageUsers.html'">Overview</button></li>
+        <li><button type="button" class="listButton" @click="showAddUser">Add user</button></li>
+      </ol>
+
+      <!-- for the bottom of dashboard -->
+      <hr class="hrColour">
+      <!-- line break for dashboard -->
+      <div class="footer">
+        Voluntree
+      </div>
+    </div>
+
+    <!-- body of main content -->
+    <main class="mainContent">
+      <div v-if="!addingUser && !editingUser" class="header">
+        <h3>Users List</h3>
+      </div>
+
+      <!--Table to display list of users and their basic information-->
+      <div id="userContent">
+        <table v-if="!addingUser && !editingUser" class="tableStyle">
+          <thead>
+            <tr class="tableHeader">
+              <th>UserID</th>
+              <th>First Name</th>
+              <th>Last Name</th>
+              <th>Role</th>
+              <th>Branch Name</th>
+              <th>Email</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <!--Table to display all the user's information-->
+          <tbody class="tableContent" id="userTable">
+            <!-- Load the user information -->
+            <tr v-for="user in users" :key="user.user_id" class="trFit">
+              <td>{{ user.user_id }}</td>
+              <td>{{ user.first_name }}</td>
+              <td>{{ user.last_name }}</td>
+              <td>{{ user.user_role }}</td>
+              <td>{{ user.branch_name || 'N/A' }}</td>
+              <td>{{ user.email }}</td>
+
+              <td>
+                <!-- Buttons to perform edit and deletion -->
+                <button title="Edit" type="button" class="iconButton" @click="startEditingUser(user)">
+                  <i class="fa-solid fa-pen-to-square"></i>
+                </button>
+                <button title="Delete" type="button" class="iconButton" @click="deleteUser(user.user_id)">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Section to edit user: current user information is displayed and there will be a section after to choose what to
+        edit -->
+        <div v-if="editingUser && !addingUser">
+          <div class="currentInformation">
+            <h3>Current User Information </h3>
+            <p><strong>User ID: </strong>{{currentUser.user_id}}<br>
+              <strong>First Name: </strong>{{currentUser.first_name}}<br>
+              <strong>Last Name: </strong>{{currentUser.last_name}}<br>
+              <strong>Email: </strong>{{currentUser.email}}<br>
+              <strong>Contact Number: </strong>{{currentUser.contact_number}}
+            </p>
+          </div>
+          <hr>
+
+          <!-- section to edit the user's information -->
+          <div>
+            <h3>Edit User Information</h3>
+            <label for="attributeSelect" class="formLabel">Select Attribute:</label>
+            <!--Displays options of possible attributes the admin can choose to change for the user-->
+            <select id="attributeSelect" v-model="selectedAttribute">
+              <option value="">Select an attribute</option>
+              <option value="firstName">First Name</option>
+              <option value="lastName">Last Name</option>
+              <option value="email">Email</option>
+              <option value="contactNumber">Contact Number</option>
+            </select>
+          </div>
+
+          <!--If user selects first name, this is displayed-->
+          <div v-if="selectedAttribute === 'firstName'" class="formDiv">
+            <form @submit.prevent="editUser">
+              <label for="editFirstName" class="formLabel">First name:</label>
+              <input type="text" id="editFirstName" v-model="userFirstName" placeholder="Enter first name" required>
+              <br>
+              <button type="submit" value="submit" class="listButton">Submit</button>
+              <button type="button" value="cancel" class="listButton" @click="cancelEditingUser">Cancel</button>
+            </form>
+          </div>
+
+          <!--If user selects last name, this is displayed-->
+          <div v-if="selectedAttribute === 'lastName'" class="formDiv">
+            <form @submit.prevent="editUser">
+              <label for="editLastName" class="formLabel">Last name:</label>
+              <input type="text" id="editLastName" v-model="userLastName" placeholder="Enter last name" required>
+              <br>
+              <button type="submit" value="submit" class="listButton">Submit</button>
+              <button type="button" value="cancel" class="listButton" @click="cancelEditingUser">Cancel</button>
+            </form>
+          </div>
+
+          <!--If user selects contact number, this is displayed-->
+          <div v-if="selectedAttribute === 'contactNumber'" class="formDiv">
+            <form @submit.prevent="editUser">
+              <label for="editContact" class="formLabel">Contact number: </label>
+              <!-- Set input type to tel along with a pattern to conform to Australian phone number standards -->
+              <input type="tel" id="editContactNumber" v-model="userContact" pattern="^04[0-9]{8}$"
+                placeholder="Enter contact number" required>
+              <br>
+              <button type="submit" value="submit" class="listButton">Submit</button>
+              <button type="button" value="cancel" class="listButton" @click="cancelEditingUser">Cancel</button>
+            </form>
+          </div>
+
+          <!--If user selects email, this will be displayed-->
+          <div v-if="selectedAttribute === 'email'" class="formDiv">
+            <form @submit.prevent="editUser">
+              <label for="editContact" class="formLabel">Email: </label>
+              <input type="email" id="editEmail" v-model="userEmail" placeholder="Enter email" required>
+              <br>
+              <button type="submit" value="submit" class="listButton">Submit</button>
+              <button type="button" value="cancel" class="listButton" @click="cancelEditingUser">Cancel</button>
+            </form>
+          </div>
+
+        </div>
+
+        <!-- section to add user -->
+        <div v-if="addingUser && !editingUser" class="form-container">
+          <div class="headerCenter">
+            <h3>Adding user</h3>
+          </div>
+
+          <form @submit.prevent="addUser">
+            <!-- Set user's first name -->
+            <div class="formDiv">
+              <label for="addFirstName" class="formLabel">First name: </label>
+              <input type="text" id="addFirstName" name="firstName" placeholder="Enter first name" required>
+              <br>
+            </div>
+
+            <!-- Set user's last name -->
+            <div class="formDiv">
+              <label for="addLastName" class="formLabel">Last name: </label>
+              <input type="text" id="addLastName" name="lastName" placeholder="Enter last name " required>
+              <br>
+            </div>
+
+            <!-- Set user's email -->
+            <div class="formDiv">
+              <label for="userEmail" class="formLabel">Email: </label>
+              <input type="email" id="userEmail" name="email" placeholder="Enter email " required>
+              <br>
+            </div>
+
+            <!-- Set user's contact number -->
+            <div class="formDiv">
+              <label for="userContact" class="formLabel">Contact number: </label>
+              <!-- Set input type to tel along with a pattern to conform to Australian phone number standards -->
+              <input type="tel" id="userContact" name="contactNumber" placeholder="04xxxxxxx " pattern="^04[0-9]{8}$"
+                required>
+            </div>
+
+            <!-- Set birthday for user -->
+            <!-- Birthday options populated using external function in birthday.js -->
+            <div class="formDiv selectForm">
+              <label for="day" class="formLabel">Day:</label>
+              <select id="day" name="day" required></select>
+
+              <label for="month" class="formLabel">Month:</label>
+              <select id="month" name="month" required></select>
+
+              <label for="year" class="formLabel">Year:</label>
+              <select id="year" name="year" required></select>
+            </div>
+
+            <div class="formDiv selectForm">
+              <!-- Set role of user: Either manager or volunteer -->
+              <label for="userRole" class="formLabel">User Role: </label>
+              <select id="userRole" name="userRole" required>
+                <option value="">Select role</option>
+                <option value="MANAGER">Manager</option>
+                <option value="VOLUNTEER">Volunteer</option>
+              </select>
+
+              <!--Set branch for user, Branch options populated by retrieveing branch names from database-->
+              <label for="userBranch" class="formLabel">Branch: </label>
+              <select id="userBranch" name="userBranch" required>
+                <option value="">Select branch</option>
+                <option v-for="branch in branches" :value="branch.branch_id" :key="branch.branch_id">
+                  {{ branch.branch_name }}
+                </option>
+              </select>
+              <br>
+            </div>
+
+            <!--Setting new default password for user-->
+            <div class="formDiv">
+              <label for="userPassword" class="formLabel">Password: </label>
+              <input type="password" id="userPassword" name="userPassword" placeholder="Enter password"
+                pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" maxlength="18"
+                title="The password must contain 6 to 18 characters, which must include at least 1 digit, 1 uppercase letter and 1 lowercase letter"
+                required>
+              <button type=button id="passwordButton" class="listButton" onclick="showPassword()">Show password</button>
+              <br>
+            </div>
+
+            <!--Submit and cancel button-->
+            <div class="submitCancelButton">
+              <input type="submit" class="listButton" value="Add user">
+              <button type="button" value="cancel" class="listButton" @click="cancelAddUser">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+
+    <script>
+    // Function to show and hide password input
+      function showPassword() {
+        var passwordInput = document.getElementById('userPassword');
+        if (passwordInput.type === "password") {
+          passwordInput.type = "text";
+          document.getElementById('passwordButton').innerText = 'Hide password';
+        } else {
+          passwordInput.type = "password";
+          document.getElementById('passwordButton').innerText = 'Show password';
+
+        }
+      }
+    </script>
+  </div>
+
+</body>
+
+</html>

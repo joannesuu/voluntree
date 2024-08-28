@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+  <link rel="stylesheet" href="/stylesheets/login.css">
+  <link rel="stylesheet" href="/stylesheets/subpages.css">
+
+  <script src="https://kit.fontawesome.com/71a3ca1f63.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+  <script src="/javascripts/logout.js"></script>
+</head>
+
+<body>
+  <!--Navigation Tabs-->
+  <header>
+    <!--Navigation Tabs-->
+    <nav>
+      <div class="navbar">
+        <img class="logo" src="Picture1.jpg" alt="logo">
+        <a onclick="window.location.href = '/index.html';">HOME</a>
+        <a onclick="window.location.href = '/about.html';">ABOUT US</a>
+        <a onclick="window.location.href = '/publicNews.html';">NEWS</a>
+        <a onclick="window.location.href = '/location.html';">LOCATIONS </a>
+        <div class="profile-icon">
+          <i onclick="window.location.href = '/login.html';" class="fas fa-user" title="Login"></i>
+          <button class="join" type="button" onclick="window.location.href = '/signup.html';"><b>Join</b></button>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!--Login Form-->
+  <section class="login" id="app">
+    <div class="login-form">
+      <form @submit.prevent="submitForm">
+
+        <!--Enter Email-->
+        <div class="input group">
+          <label for="email">Email</label>
+          <input type="text" id="email" v-model="formData.email" placeholder="Email" required>
+        </div>
+
+        <!--Enter Password-->
+        <div class="input group">
+          <label for="password">Password</label>
+          <input type="password" id="password" maxlength="18" v-model="formData.password" placeholder="Password"
+            pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}"
+            title="The password must contain 6 to 18 characters, which must include at least 1 digit, 1 uppercase letter and 1 lowercase letter"
+            required>
+          <button type=button id="passwordButton" class="listButton" onclick="showPassword()">Show password</button>
+        </div>
+
+        <!--Select Role-->
+        <div class="roles">
+          <label for="role">Choose your role*</label>
+          <select id="roless" v-model="formData.role" required>
+            <option v-for="role in roles" :key="role" :value="role">{{ role }}</option>
+          </select>
+        </div>
+
+        <!--Submission Button-->
+        <button type="submit" class="login-button">Login</button>
+
+        <!--Redirects to signup page-->
+        <p class="register-link"><a style="text-decoration: none;" href="/signup.html">Not a member?</a></p>
+
+      </form>
+    </div>
+  </section>
+
+  <hr>
+
+  <footer>
+    <p><b>FOLLOW US</b></p>
+    <a style="text-decoration:none;" href="http://facebook.com"><i class="fa-brands fa-facebook"></i></a>
+    <a style="text-decoration:none;" href="http://instagram.com"><i class="fa-brands fa-instagram"></i></a>
+    <a style="text-decoration:none;" href="http://linkedin.com"><i class="fa-brands fa-linkedin"></i></a>
+  </footer>
+
+  <script>
+    function showPassword() {
+      var passwordInput = document.getElementById('password');
+      if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        document.getElementById('passwordButton').innerText = 'Hide password';
+      } else {
+        passwordInput.type = "password";
+        document.getElementById('passwordButton').innerText = 'Show password';
+
+      }
+    }
+
+    new Vue({
+      el: '#app',
+      data: {
+        formData: {
+          email: '',
+          password: '',
+          role: ''
+        },
+        roles: ['Volunteer', 'Manager', 'Admin']
+      },
+      methods: {
+        submitForm() {
+          const payload = {
+            email: this.formData.email,
+            password: this.formData.password,
+            role: this.formData.role
+          };
+
+          fetch('/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+          })
+            .then(response => {
+              if (!response.ok) {
+                return response.json().then(errData => {
+                  throw new Error(errData.message);
+                });
+              }
+              return response.json();
+            })
+            .then(data => {
+              console.log('Success:', data);
+              alert('Login successful!');
+              if (this.formData.role === "Admin") {
+                window.location.href = "adminLanding.html";
+              }
+              else if (this.formData.role === "Manager") {
+                window.location.href = "managerLanding.html";
+              }
+              else if (this.formData.role === "Volunteer") {
+                window.location.href = "volunteerHome.html";
+              }
+            })
+            .catch(error => {
+              console.error('Error:', error);
+              alert('Failed to login\n' + error.message);
+              window.location.reload();
+            })
+        }
+      }
+    })
+
+    /*document.getElementById('loginForm').addEventListener('submit', function(event) {
+         event.preventDefault();
+
+         var role = document.getElementById('roless').value;
+
+         if (role === "admin") {
+             window.location.href = "adminLanding.html";
+         } else if (role === "manager") {
+             window.location.href = "managerLanding.html";
+         }else if(role === "volunteer"){
+           window.location.href = "volunteerPanel.html";
+         }
+     });*/
+
+  </script>
+</body>
+
+</html>

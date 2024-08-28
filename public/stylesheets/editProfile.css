@@ -1,0 +1,138 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+}
+
+.navbar {
+  display: flex;
+  background-color: #fff;
+  padding: 10px 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar a {
+  text-decoration: none;
+  color: #333;
+  margin-right: 20px;
+  padding: 10px 16px;
+}
+
+.navbar a:hover {
+  background-color: #ddd;
+  border-radius: 4px;
+}
+
+.navbar .profile-icon {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+}
+
+.navbar img {
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+}
+
+.navbar .profile-icon button {
+  background-color: transparent;
+  color: black;
+  border: none;
+  padding: 8px 0px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.container {
+  display: flex;
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin-left: 20px;
+}
+
+.main-content {
+  width: 100%;
+}
+
+h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  margin-left: 35px;
+}
+
+form {
+  display: grid;
+  grid-gap: 17px;
+}
+
+.form-section {
+  border-radius: 8px;
+  padding: 20px;
+  align-self: center;
+  align-items: center;
+  justify-self: center;
+  width: 50%;
+}
+
+fieldset {
+  border: none;
+  padding: 0;
+}
+
+legend {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  font-size: 14.5px ;
+  font-weight: bold;
+
+}
+
+.input-group {
+  margin-bottom: 15px;
+
+}
+
+label {
+  font-size: 14px;
+  margin-bottom: 5px;
+  display: block;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="tel"],
+select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+button {
+  display: block;
+  width: 30%;
+  padding: 10px;
+  background-color: #245200
+  ;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+button:hover {
+  background-color: #245200
+  ;
+}

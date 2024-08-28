@@ -1,0 +1,192 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+  }
+
+  i {
+    margin-right: 10px;
+  }
+
+  .navigationBar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 50px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 0 20px;
+  }
+
+  .navigationIcons {
+    display: flex;
+    align-items: center;
+  }
+
+  .iconButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin: 0 10px;
+    color: #893101;
+    transition: transform 0.3s ease;
+    display: flex;
+    align-items: center;
+    padding: 0;
+  }
+
+  .iconButton:hover {
+    transform: translateY(-3px);
+  }
+
+  #targetIcon {
+    color: #003892;
+    position: relative; /* Necessary for positioning the border */
+    display: flex;
+    align-items: center;
+  }
+
+  #targetIcon::after {
+    content: '';
+    position: absolute;
+    left: -4.5px;
+    bottom: -7px; /* Adjust this value to align the border perfectly */
+    width: 100%;
+    height: 3px;
+    background-color: #003892;
+  }
+
+  .topRightUser {
+    display: flex;
+    align-items: center;
+  }
+
+  .container {
+    display: flex;
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+  }
+
+  .mainContent {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: -50px;
+    /* padding: 20px; */
+  }
+
+
+  .sidebar {
+    width: 250px;
+    padding: 20px;
+    background-color: #ffffff;
+    border-right: 1px solid #e0e0e0;
+  }
+
+  .dashboardTitleFont {
+    color: #893101;
+    font-family: 'Poetsen One', serif;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .red {
+    color: red;
+  }
+
+  .hrColour {
+    border: 1px solid lightgray;
+    margin: 10px 0;
+  }
+
+  .latest {
+    margin: 20px 0;
+  }
+
+  .timestamp {
+    margin: 10px 0;
+  }
+
+
+  .listButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1em;
+    padding: 5px 5px 5px 5px;
+  }
+
+  .listButton:hover,
+  .listButton:focus {
+    background-color: #008192;
+    color: white;
+    box-shadow: lightgray 0 4px 4px;
+    border-radius: 10px;
+  }
+
+  .footer {
+    font-family: 'Pacifico', serif;
+    text-align: center;
+    font-size: 1.2em;
+    color: #893101;
+    margin-top: 20px;
+  }
+
+  .subscript {
+    font-size: 0.8em;
+  }
+
+  .editButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  .editButton:hover,
+  .editButton:focus {
+    background-color: #003892;
+    color: white;
+    box-shadow: lightgray 0 4px 4px;
+  }
+
+  .editProfileButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  .bannerContainer{
+    width: 50vh;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .userProfileBanner{
+    background-color: #003892;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 10vh;
+    width: 100%;
+    font-family: 'Poetsen One', serif;
+    font-size: 2.5em;
+  }
+
+  .profileItem {
+    display: flex;
+    justify-content: space-between;
+    padding-left: 5px;
+    padding-top: 15px;
+    border-bottom: 1px solid lightgray;
+  }
+  .profileContent{
+    font-family: 'Arial', sans-serif;
+    font-size: 1.2em;
+  }

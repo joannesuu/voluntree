@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Volunteer Home</title>
+    <link rel="stylesheet" href="/stylesheets/volunteerHome.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <script src="/javascripts/logout.js"></script>
+    <script src="https://kit.fontawesome.com/71a3ca1f63.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <div id="app">
+        <!-- nav bar -->
+        <div class="navbar">
+            <a onclick="window.location.href = '/volunteerHome.html';">HOME</a>
+            <a onclick="window.location.href = '/volunteerOpportunity.html';">OPPORTUNITY</a>
+            <a onclick="window.location.href = '/volunteerSchedule.html';">SCHEDULE</a>
+            <a onclick="window.location.href = '/volunteerLocation.html';">LOCATION</a>
+            <div class="profile-icon">
+                <img src="profile-pic.png" alt="Profile Picture">
+                <button type="button" id="logout" onclick="logoutUser()">Logout</button>
+            </div>
+        </div>
+
+        <main>
+            <!-- showing the user info, name and branch -->
+            <div class="container">
+                <div class="main-contentpage">
+                    <section class="welcome-section">
+                        <div class="welcome-box">
+                            <div class="welcome-photo">
+                                <img src="profile-pic.png" alt="Profile Picture">
+                            </div>
+                            <div class="welcome-profile">
+                                <h2>Welcome</h2>
+                                <h1>{{ user.first_name }} {{ user.last_name }}</h1>
+                                <p>Branch: {{ user.branch_name }}</p>
+                                <button type="button" onclick="window.location.href = '/editProfile.html';">Edit
+                                    Profile</button>
+                            </div>
+                        </div>
+                    </section>
+                    <section class="main-content">
+                        <div class="intro">
+                            <h2>Welcome to Volunteer Portal</h2>
+                            <p>Search through all branches and find new events to join in making a difference!</p>
+                            <button type="button" onclick="window.location.href = '/volunteerLocation.html';">Find your
+                                fit!</button>
+                        </div>
+
+                        <!-- showing all branches -->
+                        <div class="content-grid">
+                            <div class="content-box" v-for="branch in branches.slice(0, 3)" :key="branch.branch_name">
+                                <div class="image-container">
+                                    <img class="png" :src="correctImagePath(branch.image_url)" alt="Location Image"
+                                        @error="handleImageError" src=" ">
+                                    <div class="text-overlay">
+                                        <h3>{{ branch.branch_name }}</h3>
+                                        <p>{{ branch.street_address }}, {{ branch.city }}, {{ branch.states }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- show the posts linked to the volunteer id and branch -->
+                        <div class="updates-section">
+                            <h2 style="text-align: center;">Latest Updates</h2>
+                            <div class="updates-grid">
+                                <div class="update-box" v-for="post in posts.slice(0,2)" :key="post.post_id">
+                                    <p><i class="fas fa-bullhorn"></i> {{ post.title }}</p>
+                                    <p>{{ post.content }}</p>
+                                    <!-- <p>{{ post.published_date }} {{ post.published_time }}</p> -->
+                                </div>
+                            </div>
+                            <button class="view-more-button" type="button"
+                                onclick="window.location.href = '/volunteerPost.html';">View More</button>
+                        </div>
+
+                        <!-- show all the events but volunteer of a branch can only rsvp to the events of that branch -->
+                        <div class="events-section">
+                            <h2 style="text-align: center;">Upcoming Events</h2>
+                            <div class="event-grid">
+                                <div class="event-box" v-for="event in events.slice(0,2)" :key="event.event_id">
+                                    <div class="event-content">
+
+                                        <i class="fa-solid fa-calendar-days"></i>
+                                        <div class="event-details">
+                                            <p>{{ event.name }}</p>
+                                            <!-- <p>{{ event.date }} {{ event.start_time }}</p> -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button style="display: block; margin: auto; margin-top:10px" type="button"
+                                onclick="window.location.href = '/volunteerOpportunity.html';">See all</button>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <footer>
+        <button id="subscribe-button" type="button">Subscribe to our Notifications!!</button>
+
+    </footer>
+
+    <!-- this section is to connect and fetch data using different functions. getUserData fetch the user data,
+     getEventDetails fetch the events,
+     getBranchDetails fetch the branches and getPostDetails fetch the posts.
+     The correctImagePath function is used to correct the image path and handleImageError function is used to handle the error if the image is not found.
+     subscribeToNotifications function is used to subscribe to the notifications. -->
+
+    <script>
+        new Vue({
+          el: '#app',
+          data: {
+            user: {},
+            posts: [],
+            events: [],
+            branches: [],
+            volunteerId: '',
+
+          },
+          mounted() {
+            this.getUserData();
+            this.getEventDetails();
+            this.getBranchDetails();
+            this.getPostDetails();
+            document.getElementById('subscribe-button').addEventListener('click', this.subscribeToNotifications);
+
+          },
+          methods: {
+            getUserData() {
+              axios.get('/users/displayUserNames.ajax')
+                .then(response => {
+                  console.log('User data fetched:', response.data);
+                  this.user = response.data;
+                  this.volunteerId = response.data.volunteer_id;
+                  this.getEventDetails();
+                  this.getPostDetails();
+                })
+                .catch(error => {
+                  console.error('Error fetching user data:', error.response ? error.response.data : error.message);
+                });
+            },
+            getEventDetails() {
+              axios.get('/users/displayBranchEvents.ajax')
+                .then(response => {
+                  this.events = response.data;
+                })
+                .catch(error => {
+                  console.error('Error fetching event data:', error.response ? error.response.data : error.message);
+                });
+            },
+            getPostDetails() {
+              axios.get('/users/displayBranchPosts.ajax')
+                .then(response => {
+                  this.posts = response.data;
+                })
+                .catch(error => {
+                  console.error('Error fetching post data:', error.response ? error.response.data : error.message);
+                });
+            },
+            correctImagePath(imagePath) {
+              if (imagePath.startsWith('/')) {
+                return imagePath;
+              } else {
+                return `/public/${imagePath}`;
+              }
+            },
+            handleImageError(event) {
+              event.target.src = 'rundle.jpg';
+            },
+            getBranchDetails() {
+                axios.get('/users/displayBranches.ajax')
+                    .then(response => {
+                        console.log('Branch data fetched:', response.data);
+                        this.branches = response.data;
+                    })
+                    .catch(error => {
+                        console.error('Error fetching branch data:', error.response ? error.response.data : error.message);
+                    });
+            },
+            subscribeToNotifications() {
+                axios.post('/users/subscribeNotifications', { volunteerId: this.volunteerId })
+                    .then(response => {
+                        alert('Subscribed to notifications successfully!');
+                    })
+                    .catch(error => {
+                        console.error('Error subscribing to notifications:', error.response ? error.response.data : error.message);
+                    });
+            }
+          }
+        });
+      </script>
+
+</body>
+</html>

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Admin Home Page</title>
+    <link rel="stylesheet" href="/stylesheets/main.css">
+    <link rel="stylesheet" href="/stylesheets/userProfile.css">
+    <link rel="stylesheet" href="/stylesheets/subPages.css">
+    <script src="https://kit.fontawesome.com/71a3ca1f63.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <script src="/javascripts/logout.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poetsen+One&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <div class="navigationBar">
+        <!-- <div class = "topLeftIcons"> -->
+        <div class="navigationIcons">
+            <button type="button" onclick="window.location.href = '/adminLanding.html';" class="iconButton"> <i
+                    class="fa-solid fa-house fa-2x"></i></button>
+            <button type="button" onclick="window.location.href = '/manageUsers.html';" class="iconButton"> <i
+                    class="fa-solid fa-users fa-2x "></i></button>
+            <button type="button" onclick="window.location.href = '/manageBranch.html';" class="iconButton"> <i
+                    class="fa-solid fa-sitemap fa-2x"></i></button>
+        </div>
+
+
+        <div class="topRightUser">
+            <button title="Profile" type="button" onclick="window.location.href = '/userProfile.html';"
+                class="iconButton" id="targetIcon"> <i class="fa-solid fa-user fa-2x"></i></button>
+            <button title="Logout" type="button" onclick="logoutUser();" class="iconButton">
+                <i class="fa-solid fa-right-from-bracket fa-2x iconDefaultColor"></i>
+            </button>
+        </div>
+    </div>
+
+
+    <!-- for side dashboard -->
+    <div class="container" id="app">
+        <div class="sidebar">
+
+            <h1 class="dashboardTitleFont">Home</h1>
+
+            <hr class="hrColour">
+            <h2 class="dashboardTitleFont">What would you like to do?</h2>
+            <ol>
+                <li><button type="button" class="listButton"
+                        onclick="window.location.href = '/adminLanding.html';">Home</button></li>
+                <li><button type="button" class="listButton" onclick="window.location.href = '/addAdmins.html';">Add
+                        admins</button></li>
+                <li><button type="button" class="listButton"
+                        onclick="window.location.href = '/manageBranch.html';">Manage branches</button></li>
+                <li><button type="button" class="listButton"
+                        onclick="window.location.href = '/manageUsers.html';">Manage users</button></li>
+            </ol>
+
+
+            <hr class="hrColour">
+            <!-- line break for dashboard -->
+            <div class="footer">
+                Voluntree
+            </div>
+        </div>
+        <main class="mainContent">
+            <!--Section which shows user's profile informaiton-->
+            <div v-if="!editingUser">
+                <div class="bannerContainer">
+                    <p class="userProfileBanner">User Profile</p>
+                </div>
+                <!--User id-->
+                <div class="profileItem">
+                    <span class="profileContent">User id:</span>
+                    <span class="profileContent">{{ userProfile.user_id }}</span>
+                    <!-- do not allow admin to edit user id -->
+                    <div display="hidden"></div>
+                </div>
+                <!--First name-->
+                <div class="profileItem" id="firstName">
+                    <span class="profileContent">First name:</span>
+                    <span class="profileContent">{{ userProfile.first_name }}</span>
+                    <button type="button" class="editButton" @click="startEditAdmin"><i
+                            class="fa-solid fa-pen-to-square fa"></i></button>
+                </div>
+                <!--Last name -->
+                <div class="profileItem">
+                    <span class="profileContent">Last name:</span>
+                    <span class="profileContent">{{ userProfile.last_name }}</span>
+                    <button type="button" class="editButton" @click="startEditAdmin"><i
+                            class="fa-solid fa-pen-to-square fa"></i></button>
+                </div>
+                <!--Email-->
+                <div class="profileItem">
+                    <span class="profileContent">Email:</span>
+                    <span class="profileContent">{{ userProfile.email }}</span>
+                    <button type="button" class="editButton" @click="startEditAdmin"><i
+                            class="fa-solid fa-pen-to-square fa"></i></button>
+                </div>
+                <!--Contact number-->
+                <div class="profileItem">
+                    <span class="profileContent"> Contact number: </span>
+                    <span class="profileContent">{{ userProfile.contact_number }}</span>
+                    <button type="button" class="editButton" @click="startEditAdmin"><i
+                            class="fa-solid fa-pen-to-square fa"></i></button>
+                </div>
+            </div>
+            <div v-if="editingUser">
+                <div class="bannerContainer">
+                    <!--Section to edit user profile information-->
+                    <p class="userProfileBanner">Edit User</p>
+                    <div>
+                        <label for="attributeSelect" class="formLabel">Select Attribute:</label>
+                        <!--Options to select which attribute to change to-->
+                        <select id="attributeSelect" v-model="selectedAttribute">
+                            <option value="">Select an attribute</option>
+                            <option value="firstName">First Name</option>
+                            <option value="lastName">Last Name</option>
+                            <option value="email">Email</option>
+                            <option value="contactNumber">Contact Number</option>
+                        </select>
+                    </div>
+                    <!--Depending on the attribute selected, different inputs will appear-->
+                    <div v-if="selectedAttribute === 'firstName'" class="formDiv">
+                        <form @submit.prevent="editAdmin">
+                            <label for="editFirstName" class="formLabel">First name:</label>
+                            <input type="text" id="editFirstName" v-model="userFirstName" placeholder="Enter first name"
+                                required>
+                            <br>
+                            <button type="submit" value="submit" class="listButton">Submit</button>
+                            <button type="button" value="cancel" class="listButton"
+                                @click="cancelEditAdmin">Cancel</button>
+                        </form>
+                    </div>
+                    <div v-if="selectedAttribute === 'lastName'" class="formDiv">
+                        <form @submit.prevent="editAdmin">
+                            <label for="editLastName" class="formLabel">Last name:</label>
+                            <input type="text" id="editLastName" v-model="userLastName" placeholder="Enter last name"
+                                required>
+                            <br>
+                            <button type="submit" value="submit" class="listButton">Submit</button>
+                            <button type="button" value="cancel" class="listButton"
+                                @click="cancelEditAdmin">Cancel</button>
+                        </form>
+                    </div>
+                    <div v-if="selectedAttribute === 'email'" class="formDiv">
+                        <form @submit.prevent="editAdmin">
+                            <label for="editEmail" class="formLabel">Email: </label>
+                            <input type="text" id="editEmail" v-model="userEmail" placeholder="Enter email" required>
+                            <br>
+                            <button type="submit" value="submit" class="listButton">Submit</button>
+                            <button type="button" value="cancel" class="listButton"
+                                @click="cancelEditAdmin">Cancel</button>
+                        </form>
+                    </div>
+                    <div v-if="selectedAttribute === 'contactNumber'" class="formDiv">
+                        <form @submit.prevent="editAdmin">
+                            <label for="editContact" class="formLabel">Contact number: </label>
+                            <input type="text" id="editContact" v-model="userContact" placeholder="Enter contact number"
+                                required>
+                            <br>
+                            <button type="submit" value="submit" class="listButton">Submit</button>
+                            <button type="button" value="cancel" class="listButton"
+                                @click="cancelEditAdmin">Cancel</button>
+                        </form>
+                    </div>
+
+
+                </div>
+            </div>
+        </main>
+    </div>
+
+
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                userProfile: {},    //store current user information
+                editingUser: false,
+                selectedAttribute: '',
+            },
+            mounted() {
+                //get user information
+                this.fetchUserProfile();
+            },
+            watch: {
+                selectedAttribute(newValue) {
+                    //give a warning if email is to be changed
+                    if (newValue === 'email') {
+                        alert('Warning: Modifying your email will set that new email as your new username.');
+                    }
+                }
+            },
+            methods: {
+                fetchUserProfile() {
+                    fetch('/api/userAdmin', { credentials: 'include' })
+                        .then(response => response.json())
+                        .then(data => {
+                            this.userProfile = data;
+                        })
+                        .catch(error => console.error('Error fetching user data:', error));
+                },
+                //Section to edit admin
+                startEditAdmin() {
+                    this.editingUser = true;    //set editingUser to true to show the edit section
+                },
+                cancelEditAdmin() {
+                    this.editingUser = false;  //set editingUser to false to hide the edit section
+                },
+                editAdmin() {
+                    const formData = new URLSearchParams();
+                    formData.append('userID', this.userProfile.user_id);
+                    formData.append('attributeToChange', this.selectedAttribute);
+
+                    //Depending on the attribute to change, append to formData
+                    if (this.selectedAttribute === 'firstName') {
+                        formData.append('newValue', document.getElementById('editFirstName').value);
+                    } else if (this.selectedAttribute === 'lastName') {
+                        formData.append('newValue', document.getElementById('editLastName').value);
+                    } else if (this.selectedAttribute === 'contactNumber') {
+                        formData.append('newValue', document.getElementById('editContactNumber').value);
+                    }
+                    else if (this.selectedAttribute === 'email') {
+                        formData.append('newValue', document.getElementById('editEmail').value);
+                    }
+                    //Perform request to update database
+                    fetch('/users/editUser', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: formData
+                    })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Error. Could not edit user.');
+                            }
+                            return response.text();
+                        })
+                        .then(() => {
+                            alert('Successfully edited user information.');
+                            window.location.href = '/userProfile.html';
+                        })
+                        .catch(error => {
+                            alert("Error occurred. User information could not be updated. " + error.message);
+                        });
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

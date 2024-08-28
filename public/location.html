@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Location</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <link rel="stylesheet" href="stylesheets/location.css">
+    <script src="https://kit.fontawesome.com/71a3ca1f63.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+  </head>
+  <body>
+    <header>
+      <!--Navigation Tabs-->
+      <nav>
+        <div class="navbar">
+          <img class="logo" src="Picture1.jpg" alt="logo">
+          <a onclick="window.location.href = '/index.html';">HOME</a>
+          <a onclick="window.location.href = '/about.html';">ABOUT US</a>
+          <a onclick="window.location.href = '/publicNews.html';">NEWS</a>
+          <a onclick="window.location.href = '/location.html';">LOCATIONS</a>
+          <div class="profile-icon">
+            <i onclick="window.location.href = '/login.html';" class="fas fa-user" title="Login"></i>
+            <button class="join" type="button" onclick="window.location.href = '/signup.html';"><b>Join</b></button>
+          </div>
+        </div>
+      </nav>
+
+      <!--Page Heading Display-->
+      <div class="header">
+        <img src="header-image.jpg" alt="header image">
+        <div class="title">
+          <h1 style="color: white;"><b>LOCATIONS</b></h1>
+        </div>
+      </div>
+    </header>
+
+    <!--Main Content-->
+    <!-- show all branches -->
+    <div id="app">
+      <div v-for="branch in branches" :key="branch.branch_id">
+        <section class="details">
+          <div>
+            <img class="png" src="rundle.jpg" alt="no show">
+          </div>
+          <div class="branches">
+            <h2>{{ branch.branch_name }}</h2>
+            <h3>{{ branch.unit }} {{ branch.street_address }} {{ branch.city }} {{ branch.post_code }} {{ branch.states }}</h3>
+            <div class="lower-padding">
+              <i class="fa-solid fa-envelope"></i>
+              <span>{{ branch.email }}</span>
+            </div>
+            <div class="lower-padding">
+              <i class="fa-solid fa-phone"></i>
+              <span>{{ branch.phone_number }}</span>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <br>
+
+    <footer>
+      <p><b>FOLLOW US</b></p>
+      <a style="text-decoration:none;" href = "http://facebook.com"><i class="fa-brands fa-facebook"></i></a>
+      <a style="text-decoration:none;" href = "http://instagram.com"><i class="fa-brands fa-instagram"></i></a>
+      <a style="text-decoration:none;" href = "http://linkedin.com"><i class="fa-brands fa-linkedin"></i></a>
+    </footer>
+
+    <script>
+      new Vue({
+        el: '#app',
+        data: {
+          branches: []
+        },
+        methods: {
+          fetchBranches(){
+            fetch('/branchdetails')
+            .then(response => response.json())
+            .then(data => {
+              console.log('Success:', data);
+              this.branches = data;
+            })
+            .catch(error => {
+              console.log('Error fetching branch details:', error);
+            });
+          }
+        },
+        mounted() {
+          this.fetchBranches();
+        }
+      });
+    </script>
+  </body>
+</html>

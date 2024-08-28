@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Volunteer Location</title>
+  <link rel="stylesheet" href="/stylesheets/volunteerLocation.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+
+  <script src="https://kit.fontawesome.com/71a3ca1f63.js" crossorigin="anonymous"></script>
+
+
+
+
+</head>
+
+<body>
+  <div id="app">
+    <!-- nav bar -->
+    <div class="navbar">
+      <a onclick="window.location.href = '/volunteerHome.html';">HOME</a>
+      <a onclick="window.location.href = '/volunteerOpportunity.html';">OPPORTUNITY</a>
+      <a onclick="window.location.href = '/volunteerSchedule.html';">SCHEDULE</a>
+      <a onclick="window.location.href = '/volunteerLocation.html';">LOCATION</a>
+      <div class="profile-icon">
+        <img src="profile-pic.png" alt="Profile Picture">
+        <button type="button" id="logout" onclick="window.location.href = '/index.html';">Logout</button>
+      </div>
+    </div>
+
+<main>
+  <div class="container">
+    <div class="main-content">
+      <!-- showing all branches -->
+      <h1>LOCATIONS</h1>
+      <div class="branch" v-for="branch in branches" :key="branch.branch_name">
+        <img class="png" :src="correctImagePath(branch.image_url)" alt="Location Image" @error="handleImageError" src=" ">
+        <div class="details">
+          <div class="locations">
+            <h3>{{branch.branch_name}} </h3> <br>
+            <div class="address">
+
+              <i class="fas fa-map-marker-alt"></i>
+              <p>{{ branch.unit }} {{ branch.street_address }}, {{ branch.city }} {{ branch.post_code }} {{ branch.states }}</p>
+            </div>
+            <div class="phone">
+              <i class="fa-solid fa-phone"></i>
+              <p>{{ branch.phone_number }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+  </div>
+
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        branches: []
+      },
+      created() {
+        this.getBranchDetails();
+      },
+      methods: {
+        getBranchDetails() {
+          axios.get('/users/displayBranches.ajax')
+            .then(response => {
+              console.log('Branch data fetched:', response.data);
+              this.branches = response.data;
+            })
+            .catch(error => {
+              console.error('Error fetching branch data:', error.response ? error.response.data : error.message);
+            });
+        },
+        correctImagePath(imagePath) {
+          if (imagePath.startsWith('/')) {
+            return imagePath;
+        } else {
+            return `/workspaces/24S1_WDC_UG_Group_3/public/${imagePath}`;
+        }
+      },
+      handleImageError(event) {
+          event.target.src = 'rundle.jpg';
+      },
+        logout() {
+          window.location.href = '/index.html';
+        }
+      }
+    });
+  </script>
+</body>
+
+</html>

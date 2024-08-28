@@ -1,0 +1,267 @@
+/* manageUsers.html */
+#userContent {
+  /* to align text at center */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tableHeader {
+  color: #893101;
+  text-align: center;
+  font-size: 1.25em;
+  font-family: 'Poetsen One', sans-serif;
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+.tableContent {
+  color: black;
+  text-align: center;
+  font-family: Arial, sans-serif;
+
+}
+
+.tableStyle {
+  width: 100%;
+  border: 1px solid lightgray;
+  border-collapse: collapse;
+  max-width: 100%;
+  table-layout: fixed;
+}
+
+/* add admins.html */
+.addAdminBanner {
+  background-color: #003892;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 10vh;
+  width: 50vh;
+  font-family: 'Poetsen One', serif;
+  font-size: 2.5em;
+}
+
+.bannerContainer {
+  width: 50vh;
+}
+
+/* originally members.css */
+h3 {
+
+  font-style: normal;
+  font-weight: 600;
+  font-size: 1.6em;
+  line-height: 27px;
+  /* identical to box height */
+  font-family: 'Poetsen One', sans-serif;
+  color: #003892;
+}
+
+h4 {
+  color: #893101;
+}
+
+
+th,
+td {
+  border: 1px solid lightgray;
+  padding: 8px;
+
+}
+
+/*originally event.css*/
+.eventButton {
+  font-size: medium;
+  font-family: 'Arial', sans-serif;
+  align-items: center;
+  background-clip: padding-box;
+  background-color: #003892;
+  border: 1px solid transparent;
+  border-radius: .50rem;
+  box-shadow: rgba(0, 0, 0, 0.02) 0 1px 3px 0;
+  box-sizing: border-box;
+  color: #fff;
+  cursor: pointer;
+  display: inline-flex;
+  font-weight: 600;
+  justify-content: center;
+  line-height: 1.25;
+  margin: 0;
+  min-height: 3rem;
+  padding: calc(.875rem - 1px) calc(1.5rem - 1px);
+  position: relative;
+  text-decoration: none;
+  transition: all 250ms;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: baseline;
+  width: auto;
+  left: 60%;
+}
+
+.header {
+  padding: 20px;
+}
+
+.headerCenter {
+  padding: 20px;
+  text-align: center;
+}
+
+.eventButton:hover,
+.eventButton:focus {
+  background-color: #008192;
+  box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
+}
+
+.eventButton:hover {
+  transform: translateY(-1px);
+}
+
+.eventButton:active {
+  background-color: #008192;
+  box-shadow: rgba(0, 0, 0, .06) 0 2px 4px;
+  transform: translateY(0);
+}
+
+#cancel.eventButton:hover,
+#cancel.eventButton:focus {
+  background-color: #893101;
+  box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
+}
+
+#cancel.eventButton:hover {
+  transform: translateY(-1px);
+}
+
+#cancel.eventButton:active {
+  background-color: #893101;
+  box-shadow: rgba(0, 0, 0, .06) 0 2px 4px;
+  transform: translateY(0);
+}
+
+.view {
+  background-color: #003892;
+  color: white;
+}
+
+.view:hover,
+.view:focus {
+  background-color: #008192;
+  border-color: lightgray;
+}
+
+.view:hover {
+  transform: translateY(-1px);
+}
+
+.view:active {
+  background-color: #008192;
+  box-shadow: rgba(0, 0, 0, .06) 0 2px 4px;
+  transform: translateY(0);
+}
+
+#post.eventButton {
+  top: 0px;
+  left: 40px;
+}
+
+#overview {
+  /* display: flex;
+  justify-content: space-between; */
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.targetHeader {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 1em;
+  line-height: 23px;
+}
+
+
+.targetBr {
+  position: absolute;
+  width: 101px;
+  height: 3px;
+  left: 290px;
+  top: 160px;
+
+  background: #893101;
+  border-radius: 10px 10px 0px 0px;
+}
+
+.form-container {
+  width: 100%;
+  max-width: 600px;
+  margin: auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.formDiv {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+.formLabel {
+  margin-bottom: 5px;
+  font-weight: bold;
+  font-family: Arial, sans-serif;
+}
+
+.formDiv input,
+.formDiv select {
+  padding: 10px;
+  border: 1px solid lightgray;
+  border-radius: 4px;
+  font-size: 1em;
+}
+
+.submitCancelButton {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.trFit {
+  white-space: normal;
+  word-wrap: break-word;
+}
+.selectForm {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 3vh;
+}
+
+.listButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1em;
+  padding: 5px 5px 5px 5px;
+}
+
+.listButton:hover,
+.listButton:focus {
+  background-color: #008192;
+  color: white;
+  box-shadow: lightgray 0 4px 4px;
+  border-radius: 10px;
+}
+
+
+.currentInformation {
+  margin: 5px 0;
+  width: 80%;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}

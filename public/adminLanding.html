@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>System Admin Home Page</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <link rel="stylesheet" href="/stylesheets/adminLanding.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Poetsen+One&display=swap" rel="stylesheet">
+
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+        <script src="/javascripts/adminVue.js" defer></script>
+        <script src="/javascripts/logout.js"></script>
+        <script src="https://kit.fontawesome.com/71a3ca1f63.js" crossorigin="anonymous"></script>
+    </head>
+
+    <body>
+        <!--Top Navigation Bar-->
+        <div class="navigationBar">
+            <div class="navigationIcons">
+                <button title="Home" type="button" onclick="window.location.href = '/adminLanding.html';" class="iconButton"> <i
+                    class="fa-solid fa-house fa-2x"></i></button>
+            <button title="Manage Users" type="button" onclick="window.location.href = '/manageUsers.html';" class="iconButton"> <i
+                    class="fa-solid fa-users fa-2x "></i></button>
+            <button title="Manage Branches" type="button" onclick="window.location.href = '/manageBranch.html';" class="iconButton"> <i
+                    class="fa-solid fa-sitemap fa-2x"></i></button>
+            </div>
+
+            <div class="topRightUser">
+                <button title="Profile" type="button" onclick="window.location.href = '/userProfile.html';" class="iconButton"> <i
+                    class="fa-solid fa-user fa-2x iconDefaultColor"></i></button>
+                    <button title="Logout" type="button" onclick="logoutUser();" class="iconButton">
+                        <i class="fa-solid fa-right-from-bracket fa-2x iconDefaultColor"></i>
+                    </button>
+            </div>
+        </div>
+
+        <!-- for side dashboard -->
+        <div class="container" id="statisticsLanding">
+            <div class="sidebar">
+
+                <h1 class="dashboardTitleFont">Home</h1>
+                <hr class="hrColour">
+                <h2 class="dashboardTitleFont">What would you like to do?</h2>
+                <ol>
+                    <li><button type="button" class="listButton"
+                            onclick="window.location.href = '/adminLanding.html';">Home</button></li>
+                    <li><button type="button" class="listButton" onclick="window.location.href = '/addAdmins.html';">Add
+                            admins</button></li>
+                    <li><button type="button" class="listButton"
+                            onclick="window.location.href = '/manageBranch.html';">Manage branches</button></li>
+                    <li><button type="button" class="listButton"
+                            onclick="window.location.href = '/manageUsers.html';">Manage users</button></li>
+                </ol>
+
+                <!-- for the bottom of dashboard -->
+                <hr class="hrColour">
+                <!-- line break for dashboard -->
+                <div class="footer">
+                    Voluntree
+                </div>
+            </div>
+
+            <div class="box">
+                <!--To load the statistics and header-->
+                <div class="header">
+                    <p>Statistics</p>
+                </div>
+
+                <div class="circles">
+                    <div class="statisticsCircle" >Number of volunteer:{{numVolunteers}}</div>
+                    <div class="statisticsCircle">Number of branches: {{numBranches}}</div>
+                </div>
+            </div>
+
+        </div>
+
+    </body>
+
+</html>

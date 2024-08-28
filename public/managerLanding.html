@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Branch Manager Home Page</title>
+
+    <script src="https://kit.fontawesome.com/71a3ca1f63.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+
+    <script src="/javascripts/logout.js"></script>
+
+    <link rel="stylesheet" href="/stylesheets/managerLanding.css">
+    <link rel="stylesheet" href="/stylesheets/subPages.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poetsen+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="navigationBar">
+        <!--Icons to help with navigation-->
+        <div class="navigationIcons">
+            <button title="Home" type="button" onclick="window.location.href = '/managerLanding.html';"
+                class="iconButton" id="targetIcon"><i class="fa-solid fa-house fa-2x"></i></button>
+            <button title="Members" type="button" onclick="window.location.href = '/manageMembers.html';"
+                class="iconButton"><i class="fa-solid fa-users fa-2x"></i></button>
+            <button title="Events" type="button" onclick="window.location.href = '/manageEvents.html';"
+                class="iconButton"><i class="fa-solid fa-bullhorn fa-2x"></i></button>
+        </div>
+
+        <!---->
+        <div class="topRightUser">
+            <button title="Profile" type="button" onclick="window.location.href = '/managerProfile.html';"
+                class="iconButton"> <i class="fa-solid fa-user fa-2x iconDefaultColor"></i></button>
+            <button title="Logout" type="button" onclick="logoutUser()" class="iconButton"><i
+                    class="fa-solid fa-right-from-bracket fa-2x iconDefaultColor"></i></button>
+        </div>
+    </div>
+
+    <div class="container" id="statisticsLanding">
+        <div class="sidebar">
+            <h1 class="dashboardTitleFont">Home</h1>
+            <hr class="hrColour">
+
+            <!--Sidebar list that managers can click on to navigate. Alternative to the icons on top-->
+            <h2 class="dashboardTitleFont">What would you like to do?</h2>
+            <ol>
+                <li><button type="button" class="listButton"
+                        onclick="window.location.href = '/managerLanding.html'">Home</button></li>
+                <li><button type="button" class="listButton"
+                        onclick="window.location.href = '/manageMembers.html'">Manage Members</button></li>
+                <li><button type="button" class="listButton"
+                        onclick="window.location.href = '/manageEvents.html'">Manage Events</button></li>
+            </ol>
+
+            <hr class="hrColour">
+            <div class="footer">
+                Voluntree
+            </div>
+        </div>
+
+        <!--Div to display the statistics-->
+        <div class="box">
+            <div class="header">
+                <p>Statistics</p>
+            </div>
+            <!--Statistics displayed here-->
+            <div class="circles">
+                <div class="statisticsCircle">Number of volunteers: {{this.numVolunteers}}</div>
+                <div class="statisticsCircle">Number of managers of this branch: {{this.numManagers}}</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const vueinst = new Vue({
+            el: "#statisticsLanding",
+            data: {
+                userProfile: {},    //to store logged in user's information
+                numVolunteers: '',  //variable to store number of volunteers
+                numManagers: '' //variablet to store number of managers
+            },
+            methods: {
+                //function to retrieve logged in user's data
+                retrieveData() {
+                    //retrieve current logged in user's data
+                    fetch('/api/user', { credentials: 'include' })
+                        .then(response => response.json())
+                        .then(data => {
+                            this.userProfile = data;
+                            this.getStatistics();   //then only call to get the statistics
+                        })
+                        //log any potential errors
+                        .catch(error => console.log('Error fetching user data:' + error));
+                },
+                //function to retrieve statistics for landing page
+                getStatistics() {
+                    const formData = new URLSearchParams();
+                    //attach the branchId
+                    formData.append('branchId', this.userProfile.branch_id);
+
+                    //Send request to retrieve statistics
+                    fetch('/manager/statistics', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: formData
+                    })
+                        .then(response => {
+                            console.log(response);
+                            if (!response.ok) {
+                                throw new Error('Error');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            //store the data in the variables
+                            this.numVolunteers = data.numVolunteers;
+                            this.numManagers = data.numManagers;
+                        })
+                        .catch(error => {
+                            //log any potential errors
+                            console.error(error);
+                        });
+                },
+            },
+            mounted() {
+                //retrieve user data
+                this.retrieveData();
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,113 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+}
+
+.navbar {
+  display: flex;
+  background-color: #fff;
+  padding: 10px 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar a {
+  text-decoration: none;
+  color: #333;
+  margin-right: 20px;
+  padding: 10px 16px;
+}
+
+.navbar a:hover {
+  background-color: #ddd;
+  border-radius: 4px;
+}
+
+.navbar .profile-icon {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+}
+
+.navbar img {
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+}
+
+.navbar .profile-icon button {
+  background-color: transparent;
+  color: black;
+  border: none;
+  padding: 8px 0px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.container {
+  display: flex;
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin-left: 20px;
+}
+
+
+.main-content {
+  width: 90%;
+}
+
+h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  margin-left: 35px;
+}
+
+.branch {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  margin-left: 50px;
+}
+
+.png {
+  width: 30%;
+  height: auto;
+  border-radius: 20px;
+}
+
+.details {
+  flex: 1;
+  margin-left: 30px;
+}
+
+.locations {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.locations .address,
+.locations .phone {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+
+}
+
+.locations .address i,
+.locations .phone i {
+  margin-right: 10px;
+  font-size: 24px;
+
+}
+
+.locations .address p,
+.locations .phone p {
+  margin: 0;
+  font-size: 24px;
+}

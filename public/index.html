@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Home Page</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+  <link rel="stylesheet" href="/stylesheets/home.css">
+  <script src="https://kit.fontawesome.com/71a3ca1f63.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/moment/moment.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <header>
+      <!--Navigation Tabs-->
+      <nav>
+        <div class="navbar">
+          <img class="logo" src="Picture1.jpg" alt="logo">
+          <a onclick="window.location.href = '/index.html';">HOME</a>
+          <a onclick="window.location.href = '/about.html';">ABOUT US</a>
+          <a onclick="window.location.href = '/publicNews.html';">NEWS</a>
+          <a onclick="window.location.href = '/location.html';">LOCATIONS </a>
+          <div class="profile-icon">
+            <i onclick="window.location.href = '/login.html';" class="fas fa-user" title="Login"></i>
+            <button class="join" type="button" onclick="window.location.href = '/signup.html';"><b>Join</b></button>
+          </div>
+        </div>
+      </nav>
+
+      <!--Page Heading Display-->
+      <div class="header">
+        <img src="header-image.jpg" alt="header image">
+        <div class="title">
+          <h1 style="color: white;"><b>HOME</b></h1>
+        </div>
+      </div>
+    </header>
+
+    <!--Main Content-->
+    <section class="content-section">
+      <!--User Role Selection-->
+      <div class="roles">
+        <div class="role">
+          <i onclick="window.location.href = '/login.html';" class="fas fa-fist-raised"></i>
+          <h2 onclick="window.location.href = '/login.html';">I am a VOLUNTEER</h2>
+        </div>
+        <div class="divider"></div>
+        <div class="role">
+          <i onclick="window.location.href = '/login.html';" class="fas fa-hands"></i>
+          <h2 onclick="window.location.href = '/login.html';">I am a MANAGER or ADMIN</h2>
+        </div>
+      </div>
+
+      <hr>
+
+      <!--Events List-->
+      <h2 style="text-align: center; margin:25px">UPCOMING EVENTS</h2>
+      <hr>
+      <div class="event-grid">
+        <div class="event" v-for="(event, index) in events" :key="event.event_id" v-if="index < (showAllEvents ? events.length : 4)">
+          <div class="event-date">
+            <h2>{{ formatDate(event.date, 'DD') }}</h2>
+            <p>{{ formatDate(event.date, 'MMM').toUpperCase() }}</p>
+          </div>
+          <div class="event-details">
+            <h4>{{ event.name }}</h4>
+            <div class="event-info">
+              <div class="calendar">
+                <i class="fa-regular fa-calendar"></i>
+                <p>{{ formatDate(event.date, 'ddd DD MMM YYYY') }} {{ event.start_time }}</p>
+              </div>
+              <div class="location">
+                <i class="fa-solid fa-location-arrow"></i>
+                <p>{{ event.street_address }}</p>
+              </div>
+            </div>
+          </div>
+          <div class="details-box">
+            <a href="#" @click="openEventModal(event)">Details</a>
+          </div>
+        </div>
+      </div>
+      <button v-if="events.length > 4" style="display: block; margin: auto; margin-top:10px" type="button" @click="toggleShowAllEvents" class="view-more-button">
+        {{ showAllEvents ? 'Show Less' : 'View More' }}
+      </button>
+    </section>
+
+    <div v-if="selectedEvent" class="modal-overlay" @click="closeEventModal">
+      <div class="modal-content" @click.stop>
+        <span class="close-button" @click="closeEventModal">&times;</span>
+        <h2>{{ selectedEvent.name }}</h2>
+        <p>Date: {{ formatDate(selectedEvent.date, 'ddd DD MMM YYYY') }}</p>
+        <p>Time: {{ formatTime(selectedEvent.start_time) }} - {{ formatTime(selectedEvent.end_time) }}</p>
+        <p>Location: {{ selectedEvent.street_address }}, {{ selectedEvent.city }}, {{ selectedEvent.state }}</p>
+        <p>Description: {{ selectedEvent.description }}</p>
+      </div>
+    </div>
+
+    <hr>
+    <!--Branch Updates List-->
+    <div class="updates-section">
+      <h2 style="text-align: center; margin:25px">LATEST UPDATES</h2>
+      <hr>
+      <div class="updates-grid">
+        <div class="update" v-for="post in posts.slice(0, 2)" :key="post.post_id">
+          <div class="update-icon">
+            <i class="fas fa-bullhorn"></i>
+          </div>
+          <div class="update-details">
+            <p>{{ post.title }}</p>
+            <p>{{ post.content }}</p>
+          </div>
+          <div class="details-box">
+            <a href="#" @click="openPostModal(post)">Details</a>
+          </div>
+        </div>
+      </div>
+      <button class="view-more-button" type="button" onclick="window.location.href = '/publicNews.html';">View More</button>
+    </div>
+
+    <!-- Showing details  -->
+    <div v-if="selectedPost" class="modal-overlay" @click="closePostModal">
+      <div class="modal-content" @click.stop>
+        <span class="close" @click="closePostModal">&times;</span>
+        <img class="post-image" src="images.png" alt="Post Image">
+        <h2>{{ selectedPost.title }}</h2>
+        <p>{{ selectedPost.content }}</p>
+        <p><strong>Published Date:</strong> {{ formatDate(selectedPost.published_date, 'ddd DD MMM YYYY') }}</p>
+        <p><strong>Published Time:</strong> {{ selectedPost.published_time }}</p>
+      </div>
+    </div>
+
+    <br>
+
+    <footer>
+      <p><b>FOLLOW US</b></p>
+      <a style="text-decoration:none;" href="http://facebook.com"><i class="fa-brands fa-facebook"></i></a>
+      <a style="text-decoration:none;" href="http://instagram.com"><i class="fa-brands fa-instagram"></i></a>
+      <a style="text-decoration:none;" href="http://linkedin.com"><i class="fa-brands fa-linkedin"></i></a>
+    </footer>
+  </div>
+
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        events: [],
+        posts: [],
+        selectedPost: null,
+        selectedEvent: null,
+        showAllEvents: false
+
+      },
+      mounted() {
+        this.getEventDetails();
+        this.getPostDetails();
+      },
+      methods: {
+        // Fetching data from the server
+        getEventDetails() {
+          axios.get('/users/displayEvents.ajax')
+            .then(response => {
+              console.log('Event data fetched:', response.data);
+              this.events = response.data;
+            })
+            .catch(error => {
+              console.error('Error fetching event data:', error.response ? error.response.data : error.message);
+            });
+        },
+        // Fetching post details
+        getPostDetails() {
+          axios.get('/users/displayPublicPosts.ajax')
+            .then(response => {
+              console.log('Post data fetched:', response.data);
+              this.posts = response.data;
+            })
+            .catch(error => {
+              console.error('Error fetching post data:', error.response ? error.response.data : error.message);
+            });
+        },
+        formatDate(date, format) {
+          return moment(date).format(format);
+        },
+        formatTime(time) {
+          return moment(time, 'HH:mm:ss').format('h:mm A');
+        },
+        openPostModal(post) {
+          this.selectedPost = post;
+        },
+        closePostModal() {
+          this.selectedPost = null;
+        },
+        openEventModal(event) {
+          this.selectedEvent = event;
+        },
+        closeEventModal() {
+          this.selectedEvent = null;
+        },
+        toggleShowAllEvents() {
+          this.showAllEvents = !this.showAllEvents;
+        }
+      }
+    });
+  </script>
+</body>
+</html>

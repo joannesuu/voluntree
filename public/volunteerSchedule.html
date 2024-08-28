@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Volunteer Home</title>
+    <link rel="stylesheet" href="/stylesheets/volunteerSchedule.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/min/moment.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <script src="https://kit.fontawesome.com/71a3ca1f63.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <div id="app">
+        <div class="navbar">
+            <a href="javascript:void(0)" onclick="window.location.href = '/volunteerHome.html';">HOME</a>
+            <a href="javascript:void(0)" onclick="window.location.href = '/volunteerOpportunity.html';">OPPORTUNITY</a>
+            <a href="javascript:void(0)" onclick="window.location.href = '/volunteerSchedule.html';">SCHEDULE</a>
+            <a href="javascript:void(0)" onclick="window.location.href = '/volunteerLocation.html';">LOCATION</a>
+            <div class="profile-icon">
+                <img src="profile-pic.png" alt="Profile Picture">
+                <button type="button" id="logout" onclick="window.location.href = '/index.html';">Logout</button>
+            </div>
+        </div>
+
+        <!-- showing the events that the volunteer has rsvped to -->
+        <main>
+            <div class="container">
+                <div class="main-content">
+                    <h1>SCHEDULE</h1>
+                    <div class="opportunity-section">
+                        <div class="opportunity-content">
+                            <div class="activity-header">
+                                <div>NAME</div>
+                                <div>START TIME</div>
+                                <div>END TIME</div>
+                                <div>CONFIRMED</div>
+                            </div>
+                            <div class="activity-row" v-for="event in events" :key="event.event_id">
+                                <div><a href="#" @click.prevent="viewDetails(event.event_id)">{{ event.name }}</a></div>
+                                <div><span class="shift-icon">&#128339;</span> {{ event.start_time }}</div>
+                                <div>{{ event.end_time }}</div>
+                                <div><i class="fa-solid fa-trash" @click="deleteShift(event.event_id)"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Event Details Modal -->
+        <div v-if="selectedEvent" class="modal-overlay" @click="closeDetails">
+            <div class="modal-content" @click.stop>
+                <span class="close-button" @click="closeDetails">&times;</span>
+                <h2>{{ selectedEvent.name }}</h2>
+                <p>Date: {{ formatDate(selectedEvent.date) }}</p>
+                <p>Time: {{ formatTime(selectedEvent.start_time) }} - {{ formatTime(selectedEvent.end_time) }}</p>
+                <p>Location: {{ selectedEvent.street_address }}, {{ selectedEvent.city }}, {{ selectedEvent.state }}</p>
+                <p>Description: {{ selectedEvent.description }}</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                events: [],
+                selectedEvent: null,
+                userId: null,
+                volunteerId: null
+            },
+            created() {
+                this.getUserData();
+            },
+            methods: {
+                getUserData() {
+                    axios.get('/users/displayUserNames.ajax')
+                        .then(response => {
+                            console.log('User data fetched:', response.data);
+                            this.userId = response.data.user_id;
+                            this.volunteerId = response.data.volunteer_id;
+                            this.getEvents();
+                        })
+                        .catch(error => {
+                            console.error('Error fetching user data:', error.response ? error.response.data : error.message);
+                        });
+                },
+                getEvents() {
+                    axios.get(`/users/events/${this.volunteerId}`)
+                        .then(response => {
+                            console.log('Events data fetched:', response.data);
+                            this.events = response.data;
+                        })
+                        .catch(error => {
+                            console.error('Error fetching events data:', error.response ? error.response.data : error.message);
+                        });
+                },
+                formatDate(date) {
+                    return moment(date).format('dddd, MMMM Do YYYY');
+                },
+                formatTime(time) {
+                    return moment(time, 'HH:mm:ss').format('hh:mm A');
+                },
+                viewDetails(eventId) {
+                    axios.get(`/users/displayBranchEvents.ajax?eventId=${eventId}`)
+                        .then(response => {
+                            console.log('Event details fetched:', response.data);
+                            this.selectedEvent = response.data[0];
+                        })
+                        .catch(error => {
+                            console.error('Error fetching event details:', error.response ? error.response.data : error.message);
+                        });
+                },
+                closeDetails() {
+                    this.selectedEvent = null;
+                },
+
+                // Delete a shift
+                deleteShift(eventId) {
+                    axios.delete('/users/deleteRsvp', { data: { eventId: eventId, volunteerId: this.volunteerId } })
+                        .then(response => {
+                            alert('Shift deleted successfully');
+                            this.getEvents(); // Refresh the list of events
+                        })
+                        .catch(error => {
+                            console.error('Error deleting shift:', error.response ? error.response.data : error.message);
+                        });
+                },
+                logout() {
+                    window.location.href = '/index.html';
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

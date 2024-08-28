@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Sign Up</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+  <link rel="stylesheet" href="/stylesheets/signup.css">
+  <link rel="stylesheet" href="/stylesheets/subpages.css">
+
+  <script src="https://kit.fontawesome.com/71a3ca1f63.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+</head>
+
+<body>
+  <header>
+    <!--Navigation Tabs-->
+    <nav>
+      <div class="navbar">
+        <img class="logo" src="Picture1.jpg" alt="logo">
+        <a onclick="window.location.href = '/index.html';">HOME</a>
+        <a onclick="window.location.href = '/about.html';">ABOUT US</a>
+        <a onclick="window.location.href = '/publicNews.html';">NEWS</a>
+        <a onclick="window.location.href = '/location.html';">LOCATIONS </a>
+        <div class="profile-icon">
+          <i onclick="window.location.href = '/login.html';" class="fas fa-user" title="Login"></i>
+          <button class="join" type="button" onclick="window.location.href = '/signup.html';"><b>Join</b></button>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!--Signup Form-->
+  <section class="signup" id="app">
+    <div class="signup-form">
+      <form @submit.prevent="submitForm">
+
+        <!--Name-->
+        <div class="input-row">
+          <div class="input-group">
+            <label for="first-name">First Name*</label>
+            <input type="text" id="first-name" v-model="formData.firstName" required>
+          </div>
+          <div class="input-group">
+            <label for="last-name">Last Name*</label>
+            <input type="text" id="last-name" v-model="formData.lastName" required>
+          </div>
+        </div>
+
+        <!--Email Password Contact-->
+        <div class="input-row">
+          <div class="input-group">
+            <label for="email">Email*</label>
+            <input type="email" id="email" v-model="formData.email" required>
+          </div>
+
+          <div class="input-group">
+            <label for="password">Password*</label>
+            <input type="password" id="password" v-model="formData.password" placeholder="Enter password"
+              pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" maxlength="18"
+              title="The password must contain 6 to 18 characters, which must include at least 1 digit, 1 uppercase letter and 1 lowercase letter"
+              required>
+              <button type=button id="passwordButton" class="listButton" onclick="showPassword()">Show password</button>
+
+          </div>
+
+          <div class="input-group">
+            <label for="tel">Phone Number*</label>
+            <input type="tel" id="phone" v-model="formData.phone" placeholder="04xxxxxxx" pattern="[04][0-9]{9}"
+              required>
+          </div>
+        </div>
+
+        <!--Date of Birth-->
+        <div class="input-row">
+          <div class="input-group">
+            <label for="day">Date of birth*</label>
+            <select id="day" v-model="formData.day" required>
+              <option v-for="day in days" :key="day" :value="day">{{ day }}</option>
+            </select>
+            <select id="month" v-model="formData.month" required>
+              <option v-for="month in months" :key="month.value" :value="month.value">{{ month.name }}</option>
+            </select>
+            <select id="year" v-model="formData.year" required>
+              <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
+            </select>
+          </div>
+        </div>
+
+        <!--Role Selection-->
+        <div class="input-row">
+          <fieldset>
+            <legend>Choose your role</legend>
+            <label><input type="radio" v-model="formData.role" value="VOLUNTEER">Volunteer</label>
+            <label><input type="radio" v-model="formData.role" value="MANAGER">Manager</label>
+          </fieldset>
+        </div>
+
+        <!--Branch Selection-->
+        <div class="input-row">
+          <div class="input-group">
+            <label for="branch">Select Branch</label>
+            <select id="branch" v-model="formData.branchId" required>
+              <option v-for="branch in branches" :key="branch.branch_id" :value="branch.branch_id">{{ branch.branch_name
+                }}</option>
+            </select>
+          </div>
+        </div>
+
+        <!--Form Submission Button-->
+        <button class="submit-form" type="submit">Submit</button>
+      </form>
+    </div>
+  </section>
+
+  <hr>
+
+  <footer>
+    <p><b>FOLLOW US</b></p>
+    <a style="text-decoration:none;" href="http://facebook.com"><i class="fa-brands fa-facebook"></i></a>
+    <a style="text-decoration:none;" href="http://instagram.com"><i class="fa-brands fa-instagram"></i></a>
+    <a style="text-decoration:none;" href="http://linkedin.com"><i class="fa-brands fa-linkedin"></i></a>
+  </footer>
+
+  <script>
+    function showPassword() {
+      var passwordInput = document.getElementById('password');
+      if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        document.getElementById('passwordButton').innerText = 'Hide password';
+      } else {
+        passwordInput.type = "password";
+        document.getElementById('passwordButton').innerText = 'Show password';
+
+      }
+    }
+    new Vue({
+      el: '#app',
+      data: {
+        formData: {
+          firstName: '',
+          lastName: '',
+          email: '',
+          password: '',
+          phone: '',
+          day: '01',
+          month: '01',
+          year: '2000',
+          role: '',
+          branchId: ''
+        },
+        days: Array.from({ length: 31 }, (v, k) => ('0' + (k + 1)).slice(-2)),
+        months: [
+          { value: '01', name: 'January' }, { value: '02', name: 'February' },
+          { value: '03', name: 'March' }, { value: '04', name: 'April' },
+          { value: '05', name: 'May' }, { value: '06', name: 'June' },
+          { value: '07', name: 'July' }, { value: '08', name: 'August' },
+          { value: '09', name: 'September' }, { value: '10', name: 'October' },
+          { value: '11', name: 'November' }, { value: '12', name: 'December' }
+        ],
+        years: Array.from({ length: 2024 - 1944 + 1 }, (v, k) => 1944 + k),
+        branches: []
+      },
+      methods: {
+        fetchBranches() {
+          fetch('/getbranches')
+            .then(response => response.json())
+            .then(data => {
+              this.branches = data;
+            })
+            .catch(error => {
+              console.error('Error fetching branch data:', error);
+            });
+        },
+        submitForm() {
+          const payload = {
+            firstName: this.formData.firstName,
+            lastName: this.formData.lastName,
+            email: this.formData.email,
+            password: this.formData.password,
+            phone: this.formData.phone,
+            dateOfBirth: `${this.formData.year}-${this.formData.month}-${this.formData.day}`,
+            role: this.formData.role,
+            branchId: this.formData.branchId
+          };
+          fetch('/signup', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+          })
+            .then(response => {
+              if (!response.ok) {
+                return response.json().then(errData => {
+                  throw new Error(errData.message); // Pass error message to catch
+                });
+              }
+              return response.json();
+            })
+            .then(data => {
+              console.log('Success:', data);
+              alert('Form submitted successfully!');
+              window.location.href = "login.html";
+            })
+            .catch(error => {
+              console.error('Error:', error);
+              alert('Failed to submit form\n' + error.message);
+              window.location.reload(); // This will refresh the page
+            });
+        }
+      },
+      mounted() {
+        this.fetchBranches();
+      },
+    });
+  </script>
+</body>
+
+</html>

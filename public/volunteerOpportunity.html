@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Volunteer Home</title>
+    <link rel="stylesheet" href="/stylesheets/volunteerOpportunity.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/min/moment.min.js"></script>
+</head>
+<body>
+    <div id="app">
+        <div class="navbar">
+            <a onclick="window.location.href = '/volunteerHome.html';">HOME</a>
+            <a onclick="window.location.href = '/volunteerOpportunity.html';">OPPORTUNITY</a>
+            <a onclick="window.location.href = '/volunteerSchedule.html';">SCHEDULE</a>
+            <a onclick="window.location.href = '/volunteerLocation.html';">LOCATION</a>
+            <div class="profile-icon">
+                <img src="profile-pic.png" alt="Profile Picture">
+                <button type="button" id="logout" onclick="window.location.href = '/index.html';">Logout</button>
+            </div>
+        </div>
+
+        <!-- showing all opportunities from all branches -->
+        <main>
+            <div class="container">
+                <div class="main-content">
+                    <h1>UPCOMING EVENTS</h1>
+                    <!-- <div class="tabs">
+                        <button type="button" class="tab-button" id="past">Past</button>
+                        <button type="button" class="tab-button" id="upcoming">Upcoming</button>
+                    </div> -->
+                    <div class="events" v-for="event in events" :key="event.event_id">
+                        <div class="event">
+                            <div class="event-details">
+                                <h3>{{ event.name }}</h3>
+                                <p>{{ formatDate(event.date) }} {{ formatTime(event.start_time) }} - {{ formatTime(event.end_time) }}<br>{{ event.street_address }}, {{ event.city }}, {{ event.state }}</p>
+                            </div>
+                            <button type="button" class="details-button" @click="viewDetails(event.event_id)">Details</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- when clicked on the details be able to see the event details -->
+
+        <!-- Event Details Modal -->
+        <div v-if="selectedEvent" class="modal-overlay" @click="closeDetails">
+            <div class="modal-content" @click.stop>
+                <span class="close-button" @click="closeDetails">&times;</span>
+                <h2>{{ selectedEvent.name }}</h2>
+                <p>Date: {{ formatDate(selectedEvent.date) }}</p>
+                <p>Time: {{ formatTime(selectedEvent.start_time) }} - {{ formatTime(selectedEvent.end_time) }}</p>
+                <p>Location: {{ selectedEvent.street_address }}, {{ selectedEvent.city }}, {{ selectedEvent.state }}</p>
+                <p>Description: {{ selectedEvent.description }}</p>
+                <button type="button" class="btn" @click="rsvp(selectedEvent.event_id)">RSVP</button>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        new Vue({
+            el: "#app",
+            data: {
+              events: [],
+              selectedEvent: null,
+              userId: null,
+              volunteerId: null
+
+            },
+            created() {
+              this.getEventDetails();
+              this.getUserData();
+            },
+            methods: {
+              getUserData() {
+                axios.get('/users/displayUserNames.ajax')
+                    .then(response => {
+                        console.log('User data fetched:', response.data);
+                        this.userId = response.data.user_id; // Store user ID
+                        this.volunteerId = response.data.volunteer_id; // Store volunteer ID
+                        this.getEventDetails(); // Fetch events after getting the user ID
+                    })
+                    .catch(error => {
+                        console.error('Error fetching user data:', error.response ? error.response.data : error.message);
+                    });
+              },
+              getEventDetails() {
+                axios.get('/users/displayEvents.ajax')
+                  .then(response => {
+                    console.log('Event data fetched:', response.data);
+                    this.events = response.data;
+                  })
+                  .catch(error => {
+                    console.error('Error fetching event data:', error.response ? error.response.data : error.message);
+                  });
+              },
+              formatDate(date) {
+                return moment(date).format('dddd, MMMM Do YYYY');
+              },
+              formatTime(time) {
+                return moment(time, 'HH:mm:ss').format('hh:mm A');
+              },
+              viewDetails(eventId) {
+                axios.get(`/users/displayEvents.ajax?eventId=${eventId}`)
+                  .then(response => {
+                    console.log('Event details fetched:', response.data);
+                    this.selectedEvent = response.data[0];
+                  })
+                  .catch(error => {
+                    console.error('Error fetching event details:', error.response ? error.response.data : error.message);
+                  });
+              },
+              closeDetails() {
+                this.selectedEvent = null;
+              },
+              logout() {
+                window.location.href = '/index.html';
+              },
+
+              // event and volunteer id are added to rsvp table when clicked
+              rsvp(eventId) {
+                axios.post('/users/rsvp', { eventId: eventId, volunteerId: this.volunteerId })
+                  .then(response => {
+                    alert('RSVP successful');
+                    this.closeDetails();
+                    this.getEventDetails(); // Refresh the list of events
+                  })
+                  .catch(error => {
+                    console.error('Error RSVPing to event:', error.response ? error.response.data : error.message);
+                    alert(error.response ? error.response.data : 'An error occurred while RSVPing');
+                  });
+              }
+            }
+          })
+    </script>
+</body>
+</html>

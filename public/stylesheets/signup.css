@@ -1,0 +1,160 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: white;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+  padding: 10px 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar a {
+  text-decoration: none;
+  color: #333;
+  margin: 0 15px;
+  padding: 10px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.navbar a:hover {
+  background-color: #ddd;
+  color: #000;
+  border-radius: 4px;
+}
+
+.navbar .profile-icon {
+  display: flex;
+  align-items: center;
+}
+
+.navbar .profile-icon i {
+  font-size: 20px;
+  margin-right: 15px;
+  cursor: pointer;
+}
+
+.navbar .profile-icon button {
+  background-color: #893101;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.navbar .profile-icon button:hover {
+  background-color: #b34d09;
+}
+
+.logo {
+  width: 70px;
+  margin-right: 20px;
+}
+
+.join {
+  border-radius: 20px;
+  background-color: #893101;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+}
+
+.signup {
+  margin-top: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.signup-form {
+  display: grid;
+  grid-gap: 17px;
+  width:50%;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.input-row {
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+
+.input-group:last-child {
+  margin-right: 0;
+}
+
+/* input[type="text"], select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+
+} */
+form {
+  display: grid;
+  grid-gap: 17px;
+}
+
+fieldset {
+  border: none;
+  padding: 0;
+}
+
+legend {
+  display: block;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-size: 14.5px ;
+}
+
+.input-group {
+  margin-bottom: 15px;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="tel"],
+select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+
+.fa-brands {
+  font-size: 15px;
+  margin-right: 10px;
+}
+
+
+label {
+  font-size: 14px;
+}
+
+footer {
+  text-align: center;
+  padding: 20px;
+}
+
+.submit-form {
+  background-color: #003892;
+  color: white;
+  border: none;
+  margin-top: 10px;
+  padding: 10px 20px;
+  cursor: pointer;
+  width: 40%;
+  border-radius: 8px;
+}

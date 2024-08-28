@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Volunteer Home</title>
+    <link rel="stylesheet" href="/stylesheets/editProfile.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <script src="https://kit.fontawesome.com/71a3ca1f63.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <div id="app">
+        <div class="navbar">
+            <a onclick="window.location.href = '/volunteerHome.html';">HOME</a>
+            <a onclick="window.location.href = '/volunteerOpportunity.html';">OPPORTUNITY</a>
+            <a onclick="window.location.href = '/volunteerSchedule.html';">SCHEDULE</a>
+            <a onclick="window.location.href = '/volunteerLocation.html';">LOCATION</a>
+            <div class="profile-icon">
+                <img src="profile-pic.png" alt="Profile Picture">
+                <button type="button" id="logout" @click="logout">Logout</button>
+            </div>
+        </div>
+
+        <!-- edit the user profile -->
+        <main>
+            <div class="container">
+                <div class="main-content">
+                    <h1>My Profile - Contact Information</h1>
+                    <div class="form-section">
+                        <form @submit.prevent="updateProfile">
+                            <fieldset>
+                                <legend>NAME FIELDS</legend>
+                                <label for="firstName">First Name</label>
+                                <input type="text" id="firstName" name="firstName" v-model="user.firstName">
+
+                                <label for="lastName">Last Name</label>
+                                <input type="text" id="lastName" name="lastName" v-model="user.lastName">
+                            </fieldset>
+
+                            <fieldset>
+                                <legend>EMAIL ADDRESSES</legend>
+                                <label for="email">Email Address</label>
+                                <input type="email" id="email" name="email" v-model="user.email">
+                            </fieldset>
+
+                            <fieldset>
+                                <legend>PHONE NUMBERS</legend>
+                                <label for="cellPhone">Cell Phone</label>
+                                <input type="tel" id="cellPhone" name="cellPhone" v-model="user.contact_number">
+                            </fieldset>
+
+                            <fieldset>
+                                <legend>BRANCH</legend>
+                                <label for="branch">Branch</label>
+                                <select id="branch" v-model="user.branch_id">
+                                    <option v-for="branch in branches" :key="branch.branch_id" :value="branch.branch_id">
+                                        {{ branch.branch_name }}
+                                    </option>
+                                </select>
+                            </fieldset>
+
+
+                            <button class="save-form" type="submit">Save</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                user: {
+                    userId: '',
+                    firstName: '',
+                    lastName: '',
+                    email: '',
+                    contact_number: '',
+                    branch_id: '',
+                },
+                branches: []
+            },
+            created() {
+                this.fetchUserData();
+                this.getBranchDetails();
+            },
+            methods: {
+                fetchUserData() {
+                    axios.get(`/users/getUser?userId=${this.user.userId}`)
+                        .then(response => {
+                            const data = response.data;
+                            this.user.userId = data.user_id;
+                            this.user.firstName = data.first_name;
+                            this.user.lastName = data.last_name;
+                            this.user.email = data.email;
+                            this.user.contact_number = data.contact_number;
+                            this.user.branch_id = data.branch_id;
+                        })
+                        .catch(error => console.error('Error fetching user data:', error));
+                },
+                getBranchDetails() {
+                    axios.get('/users/displayBranches.ajax')
+                        .then(response => {
+                            console.log('Branch data fetched:', response.data);
+                            this.branches = response.data;
+                        })
+                        .catch(error => {
+                            console.error('Error fetching branch data:', error.response ? error.response.data : error.message);
+                        });
+                },
+                updateProfile() {
+                    axios.post('/users/updateUser', this.user)
+                        .then(response => {
+                            alert(response.data);
+                            this.fetchUserData();
+                        })
+                        .catch(error => console.error('Error updating user data:', error));
+                },
+                logout() {
+                    window.location.href = '/index.html';
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

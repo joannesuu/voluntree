@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Send Email to Members of the Branch</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- <link rel="stylesheet" href="/stylesheets/main.css"> -->
+    <link rel="stylesheet" href="/stylesheets/managerSendEmail.css">
+
+    <script src="https://kit.fontawesome.com/71a3ca1f63.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+
+    <script src="/javascripts/logout.js" defer></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poetsen+One&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!--Top Navigation Bar-->
+    <div class="navigationBar">
+        <div class="navigationIcons">
+            <button title="Home" type="button" onclick="window.location.href = '/managerLanding.html';"
+                class="iconButton"><i class="fa-solid fa-house fa-2x"></i></button>
+            <button title="Members" type="button" onclick="window.location.href = '/manageMembers.html';"
+                class="iconButton"><i class="fa-solid fa-users fa-2x"></i></button>
+            <button title="Events" type="button" onclick="window.location.href = '/manageEvents.html';"
+                class="iconButton" id="targetIcon"><i class="fa-solid fa-bullhorn fa-2x"></i></button>
+        </div>
+        <div class="topRightUser">
+            <button title="Profile" type="button" onclick="window.location.href = '/managerProfile.html';"
+                class="iconButton"><i class="fa-solid fa-user fa-2x iconDefaultColor"></i></button>
+            <button title="Logout" type="button" onclick="logoutUser();" class="iconButton">
+                <i class="fa-solid fa-right-from-bracket fa-2x iconDefaultColor"></i>
+            </button>
+        </div>
+    </div>
+
+    <!--Content below Nav. Bar-->
+    <div class="container">
+
+        <!--Side bar-->
+        <div class="sidebar">
+            <h1 class="dashboardTitleFont">Events Manager</h1>
+
+            <!-- line break for dashboard -->
+            <hr class="hrColour">
+
+            <h2 class="dashboardTitleFont">What would you like to do?</h2>
+            <ol>
+                <li><button type="button" class="listButton" onclick="window.location.href = '/managerPostUpdate.html';">Post
+                        an update</button></li>
+                <li><button type="button" class="listButton" onclick="window.location.href = '/managerSendEmail.html';">Email
+                        members</button></li>
+            </ol>
+
+            <!-- line break for dashboard -->
+            <hr class="hrColour">
+
+            <div class="footer">
+                Voluntree
+            </div>
+        </div>
+
+        <!--Main Content-->
+        <main class="mainContent" id="app">
+            <div class="formContainer">
+                <h3 class="formTitle">Create Email</h3>
+
+                <!--Form to collect email content from manager-->
+                <form name="postForm" @submit.prevent="submitEmail" class="emailForm">
+
+                    <!--Email Subject-->
+                    <div class="formGroup">
+                        <label for="subject">Subject*:</label>
+                        <input type="text" name="subject" v-model="postData.subject" required>
+                    </div>
+
+                    <!--Email Body-->
+                    <div class="formGroup">
+                        <label for="body">Message*:</label>
+                        <textarea name="body" maxlength="500" v-model="postData.body" required></textarea>
+                    </div>
+
+                    <!--Submit/Cancel Button-->
+                    <div class="formGroup formButtons">
+                        <button class="eventButton" type="submit">Send Email</button>
+                        <button type="button" class="eventButton" id="cancel" onclick="window.location.href = '/manageEvents.html';">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <!--Function to send email content to backend NodeMailer(Ethereal) server-->
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                postData: {
+                    subject: '',
+                    body: ''
+                }
+            },
+            methods: {
+                submitEmail() {
+                    const payload = {
+                        subject: this.postData.subject,
+                        body: this.postData.body
+                    };
+                    fetch('/manager/sendemail', {
+                        method: 'POST',
+                        headers: {
+                            'content-type': 'application/json'
+                        },
+                        credentials: 'include',
+                        body: JSON.stringify(payload)
+                    })
+                        .then(response => {
+                            if (!response.ok) {
+                                // Check if the response is JSON before parsing
+                                if (response.headers.get("content-type").includes("application/json")) {
+                                    return response.json().then(errData => {
+                                        throw new Error(errData.message);
+                                    });
+                                }
+                                else {
+                                    throw new Error('Server responded with a non-JSON response');
+                                }
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            console.log('Success:', data);
+                            alert('Email sent successfully!');
+                            window.location.href = "/manageEvents.html";
+                        })
+                        .catch(error => {
+                            console.error('Error:', error.message);
+                            alert('Failed to send email\n' + error.message);
+                            window.location.reload(); // This will refresh the page
+                        });
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

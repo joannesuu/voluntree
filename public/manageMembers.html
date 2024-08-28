@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Manage Members</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="/stylesheets/manageMembers.css">
+    <link rel="stylesheet" href="/stylesheets/subPages.css">
+    <link rel="stylesheet" href="/stylesheets/main.css">
+
+    <script src="https://kit.fontawesome.com/71a3ca1f63.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+
+    <script src="/javascripts/orgManager.js" defer></script>
+    <script src="/javascripts/logout.js" defer></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;1,300;1,400&display=swap"
+        rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poetsen+One&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="navigationBar">
+        <div class="navigationIcons">
+            <button title="Home" type="button" onclick="window.location.href = '/managerLanding.html';"
+                class="iconButton"><i class="fa-solid fa-house fa-2x"></i></button>
+            <button title="Members" type="button" onclick="window.location.href = '/manageMembers.html';"
+                class="iconButton" id="targetIcon"><i class="fa-solid fa-users fa-2x"></i></button>
+            <button title="Events" type="button" onclick="window.location.href = '/manageEvents.html';"
+                class="iconButton"><i class="fa-solid fa-bullhorn fa-2x"></i></button>
+        </div>
+
+        <div class="topRightUser">
+            <button title="Profile" type="button" onclick="window.location.href = '/managerProfile.html';"
+                class="iconButton"> <i class="fa-solid fa-user fa-2x iconDefaultColor"></i></button>
+            <button title="Logout" type="button" onclick="logoutUser();" class="iconButton">
+                <i class="fa-solid fa-right-from-bracket fa-2x iconDefaultColor"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="container" id="manageMembers">
+        <!-- for side dashboard -->
+        <div class="sidebar">
+            <h1 class="dashboardTitleFont">Memberships</h1>
+            <hr class="hrColour">
+
+            <h2 class="dashboardTitleFont">What would you like to do?</h2>
+            <ol>
+              <li><button type="button" class="listButton"
+                  onclick="window.location.href = '/manageMembers.html'">Overview</button></li>
+            </ol>
+
+            <hr class="hrColour">
+            <!-- line break for dashboard -->
+
+            <div class="footer">
+                Voluntree
+            </div>
+        </div>
+
+        <!--for main content next to side dashboard-->
+        <main class="mainContent">
+            <div class="headerCenter">
+                <h3>Active Members</h3>
+            </div>
+            <div id="userContent">
+
+                <table class="tableStyle">
+                    <thead>
+                        <tr class="tableHeader">
+                            <th>UserID</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                        </tr>
+                    </thead>
+                    <!--Show information of all members in branch-->
+                    <tbody class="tableContent" id="userTable">
+                        <tr v-for="member in members" :key="member.user_id">
+                            <td>{{ member.user_id }}</td>
+                            <td>{{ member.first_name }}</td>
+                            <td>{{ member.last_name }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>
